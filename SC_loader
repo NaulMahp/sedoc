@@ -1,0 +1,20 @@
+#include <windows.h>
+#include <stdio.h>
+
+/* Chuong trinh load shellcode vao trong memory */
+
+int main()
+{
+	HANDLE hFile;
+	DWORD size, err, byteread;
+	const char* path = "file's path";
+	LPVOID base;
+
+	hFile = CreateFile(path, GENERIC_READ | GENERIC_WRITE, 0, NULL, OPEN_EXISTING, 0, NULL);
+	size = GetFileSize(hFile, NULL);
+	base = VirtualAlloc(NULL, (SIZE_T)size, MEM_COMMIT | MEM_RESERVE, PAGE_EXECUTE_READWRITE);
+	ReadFile(hFile, base, size, &byteread, NULL);
+	err = GetLastError();
+	if(err)
+		printf("%ld", err);
+}
